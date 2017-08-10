@@ -2,21 +2,17 @@
 
 override_dh_auto_configure:
 	dh_auto_configure -- --disable-libunwind --libexec=/usr/lib/weston \
-		--with-cairo=image --enable-libinput-backend \
-		--enable-clients --enable-xwayland-test --enable-systemd-login
+		--with-cairo=image --enable-screen-sharing
 
 override_dh_auto_test:
 	# the test suite does not 100% pass in headless mode
 	dh_auto_test || true
 
-override_dh_auto_install:
-	dh_auto_install --destdir=debian/tmp
-
 override_dh_install:
 	dh_install --fail-missing -X.la
 
 override_dh_makeshlibs:
-	# No-op: libraries are private, not shared.
+	dh_makeshlibs -Xlibweston-3/ -- -c4
 
 override_dh_fixperms:
 	dh_fixperms -Xusr/bin/weston-launch
